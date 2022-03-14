@@ -11,9 +11,12 @@ mkdir /opt/test3
 tar -xf /tmp/test3.tar.gz -C /opt/test3
 rm /tmp/test3.tar.gz
 
+RELEASE_NODE=t@$(curl http://169.254.169.254/latest/meta-data/local-ipv4)
+
 mkdir /etc/test3
 cat > /etc/test3/env << EOM
-RELEASE_NODE=t@$(curl http://169.254.169.254/latest/meta-data/local-ipv4)
+RELEASE_NODE=$RELEASE_NODE
+HOME=/var/lib/test3
 HOST=${host}
 PORT=${port}
 SECRET_KEY_BASE=${secret_key_base}
@@ -46,15 +49,33 @@ SANDBOX_APNS_KEY_ID=${sandbox_apns_key_id}
 SANDBOX_APNS_KEY="${sandbox_apns_key}"
 EOM
 
+groupadd --system test3
+useradd -s /usr/sbin/nologin --system -g test3 test3
+
+mkdir -p /var/lib/test3
+
+chown -R test3:test3 /opt/test3
+chown -R test3:test3 /etc/test3
+chown -R test3:test3 /var/lib/test3
+
+cat > /usr/local/bin/test3 << EOM
+#!/bin/bash
+export RELEASE_NODE=$RELEASE_NODE
+/opt/test3/bin/t \$@
+EOM
+
+chmod +x /usr/local/bin/test3
+
 cat > /etc/systemd/system/test3.service << EOM
 [Unit]
 Description=getsince.app backend
 After=network.target
 
 [Service]
-User=root
 Type=simple
-WorkingDirectory=/opt/test3
+User=test3
+Group=test3
+WorkingDirectory=/var/lib/test3
 ExecStart=/opt/test3/bin/t start
 ExecStop=/opt/test3/bin/t stop
 Restart=on-failure
