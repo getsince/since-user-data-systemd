@@ -1,0 +1,13 @@
+spot request
+launch config
+spot fleet
+autoscaling group
+chown /etc/test3 and /opt/test3 to ubuntu
+create new user test3 and chown to it
+RemainAfterExit=yes ??
+run as ubuntu and then test3 both user and group
+log if starting test3 fails?
+pipe test3 logs to cloudwatch?
+https://gist.github.com/adam-hanna/06afe09209589c80ba460662f7dce65c
+https://duckduckgo.com/?q=systemd+logs+cloudwatch&t=osx&ia=web
+reload via ssh

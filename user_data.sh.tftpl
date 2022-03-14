@@ -1,0 +1,75 @@
+#!/bin/bash
+
+set -o errexit
+set -o pipefail
+set -o nounset
+
+# apt-get remove --purge snapd -y
+
+curl -L '${release_url}' > /tmp/test3.tar.gz
+mkdir /opt/test3
+tar -xf /tmp/test3.tar.gz -C /opt/test3
+rm /tmp/test3.tar.gz
+
+mkdir /etc/test3
+cat > /etc/test3/env << EOM
+RELEASE_NODE=t@$(curl http://169.254.169.254/latest/meta-data/local-ipv4)
+HOST=${host}
+PORT=${port}
+SECRET_KEY_BASE=${secret_key_base}
+DASHBOARD_USERNAME=${dashboard_username}
+DASHBOARD_PASSWORD=${dashboard_password}
+ADMIN_ID=${admin_id}
+EC2_NAME=${ec2_name}
+IMGPROXY_PREFIX=${imgproxy_prefix}
+IMGPROXY_KEY=${imgproxy_key}
+IMGPROXY_SALT=${imgproxy_salt}
+MAXMIND_LICENSE_KEY=${maxmind_license_key}
+TG_BOT_KEY=${tg_bot_key}
+TG_ROOM_ID=${tg_room_id}
+SENTRY_DSN=${sentry_dsn}
+DATABASE_URL=${database_url}
+AWS_ACCESS_KEY_ID=${aws_access_key_id}
+AWS_SECRET_ACCESS_KEY=${aws_secret_access_key}
+AWS_S3_BUCKET=${aws_s3_bucket}
+AWS_S3_BUCKET_STATIC=${aws_s3_bucket_static}
+STATIC_CDN=${static_cdn}
+AWS_S3_BUCKET_EVENTS=${aws_s3_bucket_events}
+TWILIO_ACCOUNT_SID=${twilio_account_sid}
+TWILIO_KEY_SID=${twilio_key_sid}
+TWILIO_AUTH_TOKEN=${twilio_auth_token}
+APNS_TOPIC=${apns_topic}
+APNS_TEAM_ID=${apns_team_id}
+PROD_APNS_KEY_ID=${prod_apns_key_id}
+PROD_APNS_KEY="${prod_apns_key}"
+SANDBOX_APNS_KEY_ID=${sandbox_apns_key_id}
+SANDBOX_APNS_KEY="${sandbox_apns_key}"
+EOM
+
+cat > /etc/systemd/system/test3.service << EOM
+[Unit]
+Description=getsince.app backend
+After=network.target
+
+[Service]
+User=root
+Type=simple
+WorkingDirectory=/opt/test3
+ExecStart=/opt/test3/bin/t start
+ExecStop=/opt/test3/bin/t stop
+Restart=on-failure
+RestartSec=5
+EnvironmentFile=/etc/test3/env
+
+[Install]
+WantedBy=multi-user.target
+EOM
+
+systemctl daemon-reload
+systemctl enable test3
+systemctl start test3
+
+curl -X POST \
+  -H 'Content-Type: application/json' \
+  -d "{\"chat_id\": \"${phone_home_tg_room_id}\", \"text\": \"VM started at http://$(curl http://169.254.169.254/latest/meta-data/public-ipv4)\"}" \
+  'https://api.telegram.org/bot${phone_home_tg_bot_key}/sendMessage'
