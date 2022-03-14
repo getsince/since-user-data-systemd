@@ -1,7 +1,5 @@
 spot request
-launch config
 spot fleet
-autoscaling group
 RemainAfterExit=yes ??
 killmode=process ??
 log if starting test3 fails?

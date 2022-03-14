@@ -14,16 +14,16 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"]
 }
 
-resource "aws_instance" "ruslan" {
-  ami   = data.aws_ami.ubuntu.id
-  count = 2
+resource "aws_launch_configuration" "ruslan" {
+  name_prefix = "ruslan-"
+  image_id    = data.aws_ami.ubuntu.id
 
   instance_type = "t3.micro"
   key_name      = "since"
 
   associate_public_ip_address = true
 
-  vpc_security_group_ids = [
+  security_groups = [
     data.aws_security_group.default.id,
     aws_security_group.ruslan_ssh.id,
     aws_security_group.http.id
@@ -65,8 +65,28 @@ resource "aws_instance" "ruslan" {
     phone_home_tg_room_id = var.phone_home_tg_room_id
   })
 
-  tags = {
-    Name = var.ec2_name
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_autoscaling_group" "ruslan" {
+  name                 = "ruslan"
+  launch_configuration = aws_launch_configuration.ruslan.id
+
+  min_size = 2
+  max_size = 2
+
+  availability_zones = [
+    "eu-north-1a",
+    "eu-north-1b",
+    "eu-north-1c"
+  ]
+
+  tag {
+    key                 = "Name"
+    value               = var.ec2_name
+    propagate_at_launch = true
   }
 
   lifecycle {
@@ -100,6 +120,13 @@ resource "aws_instance" "ruslan" {
 #   }
 # }
 
-output "public_ips" {
-  value = aws_instance.ruslan[*].public_ip
-}
+# data "aws_instance" "ruslan" {
+#   filter {
+#     name   = "tag:Name"
+#     values = [var.ec2_name]
+#   }
+# }
+
+# output "public_ips" {
+#   value = data.aws_instance.ruslan[*].public_ip
+# }
