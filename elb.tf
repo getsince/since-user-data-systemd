@@ -39,15 +39,40 @@ resource "aws_lb_listener" "http" {
   protocol          = "HTTP"
 
   default_action {
+    type = "redirect"
+
+    redirect {
+      host        = "#{host}"
+      path        = "/#{path}"
+      port        = "443"
+      protocol    = "HTTPS"
+      query       = "#{query}"
+      status_code = "HTTP_301"
+    }
+  }
+}
+
+resource "aws_lb_listener" "https" {
+  load_balancer_arn = aws_lb.ruslan.arn
+  port              = "443"
+  protocol          = "HTTPS"
+
+  ssl_policy = "ELBSecurityPolicy-2016-08"
+  # TODO
+  certificate_arn = "arn:aws:acm:eu-north-1:154782911265:certificate/ca998916-eab1-49ff-9a2a-68c19648d226"
+
+  default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.ruslan.arn
   }
 }
 
 resource "aws_lb_target_group" "ruslan" {
-  name     = "ruslan"
-  port     = var.port
-  protocol = "HTTP"
+  name = "ruslan"
+  port = var.port
+
+  protocol         = "HTTP"
+  protocol_version = "HTTP2"
 
   vpc_id      = data.aws_vpc.since.id
   target_type = "instance"

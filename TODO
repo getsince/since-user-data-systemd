@@ -1,5 +1,3 @@
-https certs
-latency-based route53 with health checks
 RemainAfterExit=yes ??
 killmode=process ??
 log if starting test3 fails?
