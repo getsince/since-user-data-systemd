@@ -1,3 +1,4 @@
+fix cross-release erlang cookie
 RemainAfterExit=yes ??
 killmode=process ??
 log if starting test3 fails?
