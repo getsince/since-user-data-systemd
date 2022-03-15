@@ -109,6 +109,8 @@ resource "aws_autoscaling_group" "ruslan" {
   min_size = 1
   max_size = 10
 
+  desired_capacity = 2
+
   health_check_grace_period = 30
 
   availability_zones = [
@@ -122,39 +124,13 @@ resource "aws_autoscaling_group" "ruslan" {
   }
 }
 
-# TODO
-# resource "aws_spot_instance_request" "ruslan" {
-#   ami = data.aws_ami.ubuntu.id
+data "aws_instances" "ruslan" {
+  filter {
+    name   = "tag:Name"
+    values = [var.ec2_name]
+  }
+}
 
-#   # spot_price             = "0.016"
-#   # block_duration_minutes = "120"
-
-#   instance_type        = "t4g.micro"
-#   spot_type            = "one-time"
-#   wait_for_fulfillment = true
-
-#   associate_public_ip_address = true
-
-#   key_name = "since"
-
-#   security_groups = [
-#     aws_security_group.ruslan_ssh.id
-#   ]
-
-#   user_data = file("user_data.sh")
-
-#   tags = {
-#     Name = "ruslan learning cloud-init and spot instances"
-#   }
-# }
-
-# data "aws_instance" "ruslan" {
-#   filter {
-#     name   = "tag:Name"
-#     values = [var.ec2_name]
-#   }
-# }
-
-# output "public_ips" {
-#   value = data.aws_instance.ruslan[*].public_ip
-# }
+output "public_ips" {
+  value = data.aws_instances.ruslan.public_ips
+}

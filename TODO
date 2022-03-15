@@ -1,5 +1,3 @@
-spot request
-spot fleet
 RemainAfterExit=yes ??
 killmode=process ??
 log if starting test3 fails?
