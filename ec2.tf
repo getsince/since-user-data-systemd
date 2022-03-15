@@ -14,22 +14,50 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"]
 }
 
-resource "aws_launch_configuration" "ruslan" {
+resource "aws_launch_template" "ruslan" {
   name_prefix = "ruslan-"
   image_id    = data.aws_ami.ubuntu.id
+
+  instance_market_options {
+    market_type = "spot"
+
+    # spot_options {
+    #   spot_instance_type = "persistent"
+    # }
+  }
 
   instance_type = "t3.micro"
   key_name      = "since"
 
-  associate_public_ip_address = true
+  instance_initiated_shutdown_behavior = "terminate"
 
-  security_groups = [
-    data.aws_security_group.default.id,
-    aws_security_group.ruslan_ssh.id,
-    aws_security_group.http.id
-  ]
+  # iam_instance_profile {
+  #   name = "test"
+  # }
 
-  user_data = templatefile("user_data.sh.tftpl", {
+  network_interfaces {
+    associate_public_ip_address = true
+
+    security_groups = [
+      data.aws_security_group.default.id,
+      aws_security_group.ruslan_ssh.id,
+      aws_security_group.http.id
+    ]
+  }
+
+  monitoring {
+    enabled = true
+  }
+
+  tag_specifications {
+    resource_type = "instance"
+
+    tags = {
+      Name = var.ec2_name
+    }
+  }
+
+  user_data = base64encode(templatefile("user_data.sh.tftpl", {
     release_url           = var.release_url,
     secret_key_base       = var.secret_key_base
     host                  = var.host,
@@ -63,7 +91,7 @@ resource "aws_launch_configuration" "ruslan" {
     sandbox_apns_key      = var.sandbox_apns_key,
     phone_home_tg_bot_key = var.phone_home_tg_bot_key,
     phone_home_tg_room_id = var.phone_home_tg_room_id
-  })
+  }))
 
   lifecycle {
     create_before_destroy = true
@@ -71,23 +99,23 @@ resource "aws_launch_configuration" "ruslan" {
 }
 
 resource "aws_autoscaling_group" "ruslan" {
-  name                 = "ruslan"
-  launch_configuration = aws_launch_configuration.ruslan.id
+  name = "ruslan"
 
-  min_size = 2
-  max_size = 2
+  launch_template {
+    id      = aws_launch_template.ruslan.id
+    version = "$Latest"
+  }
+
+  min_size = 1
+  max_size = 10
+
+  health_check_grace_period = 30
 
   availability_zones = [
     "eu-north-1a",
     "eu-north-1b",
     "eu-north-1c"
   ]
-
-  tag {
-    key                 = "Name"
-    value               = var.ec2_name
-    propagate_at_launch = true
-  }
 
   lifecycle {
     create_before_destroy = true
