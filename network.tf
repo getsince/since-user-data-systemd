@@ -15,12 +15,12 @@ data "aws_security_group" "since" {
     name   = "vpc-id"
     values = [data.aws_vpc.since.id]
   }
-  
+
   name = "default"
 }
 
 resource "aws_security_group" "ruslan_ssh" {
-  name = "ruslan_ssh2"
+  name   = "ruslan_ssh2"
   vpc_id = data.aws_vpc.since.id
 
   ingress {
