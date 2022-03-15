@@ -21,7 +21,8 @@ resource "aws_security_group" "lb" {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0", "::/0"]
+    cidr_blocks = ["0.0.0.0/0"]
+    # cidr_blocks = ["0.0.0.0/0", "::/0"]
   }
 
   egress {
@@ -50,4 +51,12 @@ resource "aws_lb_target_group" "ruslan" {
 
   vpc_id      = data.aws_vpc.since.id
   target_type = "instance"
+
+  health_check {
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+    interval            = 10
+    path                = "/health"
+    # port todo
+  }
 }

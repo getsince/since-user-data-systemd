@@ -35,6 +35,7 @@ resource "aws_launch_template" "ruslan" {
   #   name = "test"
   # }
 
+  # TODO
   network_interfaces {
     associate_public_ip_address = true
 
@@ -44,9 +45,9 @@ resource "aws_launch_template" "ruslan" {
     ]
   }
 
-  monitoring {
-    enabled = true
-  }
+  # monitoring {
+  #   enabled = true
+  # }
 
   tag_specifications {
     resource_type = "instance"
@@ -56,6 +57,7 @@ resource "aws_launch_template" "ruslan" {
     }
   }
 
+  # TODO this is visible in tfstate
   user_data = base64encode(templatefile("user_data.sh.tftpl", {
     release_url           = var.release_url,
     secret_key_base       = var.secret_key_base
@@ -105,10 +107,16 @@ resource "aws_autoscaling_group" "ruslan" {
     version = "$Latest"
   }
 
-  min_size                  = 1
-  max_size                  = 10
-  desired_capacity          = 2
+  min_size         = 0
+  desired_capacity = 2
+  max_size         = 10
+
+  target_group_arns = [
+    aws_lb_target_group.ruslan.arn
+  ]
+
   health_check_grace_period = 30
+  health_check_type         = "ELB"
 
   vpc_zone_identifier = data.aws_subnets.since.ids
 
