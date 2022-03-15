@@ -39,9 +39,8 @@ resource "aws_launch_template" "ruslan" {
     associate_public_ip_address = true
 
     security_groups = [
-      data.aws_security_group.default.id,
       aws_security_group.ruslan_ssh.id,
-      aws_security_group.http.id
+      data.aws_security_group.since.id
     ]
   }
 
@@ -106,31 +105,25 @@ resource "aws_autoscaling_group" "ruslan" {
     version = "$Latest"
   }
 
-  min_size = 1
-  max_size = 10
-
-  desired_capacity = 2
-
+  min_size                  = 1
+  max_size                  = 10
+  desired_capacity          = 2
   health_check_grace_period = 30
 
-  availability_zones = [
-    "eu-north-1a",
-    "eu-north-1b",
-    "eu-north-1c"
-  ]
+  vpc_zone_identifier = data.aws_subnets.since.ids
 
   lifecycle {
     create_before_destroy = true
   }
 }
 
-data "aws_instances" "ruslan" {
-  filter {
-    name   = "tag:Name"
-    values = [var.ec2_name]
-  }
-}
+# data "aws_instances" "ruslan" {
+#   filter {
+#     name   = "tag:Name"
+#     values = [var.ec2_name]
+#   }
+# }
 
-output "public_ips" {
-  value = data.aws_instances.ruslan.public_ips
-}
+# output "public_ips" {
+#   value = data.aws_instances.ruslan.public_ips
+# }

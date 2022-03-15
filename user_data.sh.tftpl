@@ -4,8 +4,6 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-# apt-get remove --purge snapd -y
-
 curl -L '${release_url}' > /tmp/test3.tar.gz
 mkdir /opt/test3
 tar -xf /tmp/test3.tar.gz -C /opt/test3
@@ -94,3 +92,5 @@ curl -X POST \
   -H 'Content-Type: application/json' \
   -d "{\"chat_id\": \"${phone_home_tg_room_id}\", \"text\": \"VM started at http://$(curl http://169.254.169.254/latest/meta-data/public-ipv4)\"}" \
   'https://api.telegram.org/bot${phone_home_tg_bot_key}/sendMessage'
+
+apt-get remove --purge snapd -y

@@ -1,3 +1,6 @@
+load balancer
+certs
+route53
 RemainAfterExit=yes ??
 killmode=process ??
 log if starting test3 fails?
