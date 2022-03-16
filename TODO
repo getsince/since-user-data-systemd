@@ -1,9 +1,11 @@
 fix cross-release erlang cookie
+mix release.deploy (reload via ssh)
+mix github.release
 RemainAfterExit=yes ??
 killmode=process ??
 log if starting test3 fails?
 pipe test3 logs to cloudwatch?
 https://gist.github.com/adam-hanna/06afe09209589c80ba460662f7dce65c
 https://duckduckgo.com/?q=systemd+logs+cloudwatch&t=osx&ia=web
-reload via ssh
 automatic certs / route53 records
+multi-region

@@ -107,8 +107,8 @@ resource "aws_autoscaling_group" "ruslan" {
     version = "$Latest"
   }
 
-  min_size         = 0
-  desired_capacity = 2
+  min_size         = 1
+  desired_capacity = 1
   max_size         = 10
 
   target_group_arns = [

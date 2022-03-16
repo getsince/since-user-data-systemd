@@ -21,8 +21,7 @@ resource "aws_security_group" "lb" {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-    # cidr_blocks = ["0.0.0.0/0", "::/0"]
+    cidr_blocks = ["0.0.0.0/0", "::/0"]
   }
 
   egress {
@@ -73,6 +72,8 @@ resource "aws_lb_target_group" "ruslan" {
 
   protocol         = "HTTP"
   protocol_version = "HTTP2"
+
+  deregistration_delay = 10
 
   vpc_id      = data.aws_vpc.since.id
   target_type = "instance"
