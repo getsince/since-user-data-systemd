@@ -18,6 +18,8 @@ resource "aws_launch_template" "ruslan" {
   name_prefix = "ruslan-"
   image_id    = data.aws_ami.ubuntu.id
 
+  # cpu mode = standard
+
   instance_market_options {
     market_type = "spot"
 
@@ -29,6 +31,7 @@ resource "aws_launch_template" "ruslan" {
   instance_type = "t3.micro"
   key_name      = "since"
 
+  # TODO
   instance_initiated_shutdown_behavior = "terminate"
 
   # iam_instance_profile {
@@ -57,9 +60,11 @@ resource "aws_launch_template" "ruslan" {
     }
   }
 
+  # TODO force instance refresh on change
   # TODO this is visible in tfstate
   user_data = base64encode(templatefile("user_data.sh.tftpl", {
     release_url           = var.release_url,
+    release_cookie        = var.release_cookie,
     secret_key_base       = var.secret_key_base
     host                  = var.host,
     port                  = var.port,

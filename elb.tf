@@ -21,7 +21,15 @@ resource "aws_security_group" "lb" {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0", "::/0"]
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # need to split "::/0" accorting to https://github.com/hashicorp/terraform/issues/14382#issuecomment-300769009
+  ingress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    ipv6_cidr_blocks = ["::/0"]
   }
 
   egress {
@@ -70,8 +78,10 @@ resource "aws_lb_target_group" "ruslan" {
   name = "ruslan"
   port = var.port
 
-  protocol         = "HTTP"
-  protocol_version = "HTTP2"
+  protocol = "HTTP"
+  # safari WS fails to connect with status_code=464 on HTTP2
+  # see https://forums.aws.amazon.com/thread.jspa?messageID=967355
+  protocol_version = "HTTP1"
 
   deregistration_delay = 10
 

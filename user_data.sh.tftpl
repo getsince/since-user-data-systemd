@@ -4,6 +4,7 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
+# TODO poweroff if failes to download, send notification to tg
 curl -L '${release_url}' > /tmp/test3.tar.gz
 mkdir /opt/test3
 tar -xf /tmp/test3.tar.gz -C /opt/test3
@@ -14,6 +15,7 @@ RELEASE_NODE=t@$(curl http://169.254.169.254/latest/meta-data/local-ipv4)
 mkdir /etc/test3
 cat > /etc/test3/env << EOM
 RELEASE_NODE=$RELEASE_NODE
+RELEASE_COOKIE=${release_cookie}
 HOME=/var/lib/test3
 HOST=${host}
 PORT=${port}

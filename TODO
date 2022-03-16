@@ -1,11 +1,13 @@
-fix cross-release erlang cookie
 mix release.deploy (reload via ssh)
 mix github.release
+ensure proper shutdown on spot instance kill signal
 RemainAfterExit=yes ??
 killmode=process ??
 log if starting test3 fails?
 pipe test3 logs to cloudwatch?
 https://gist.github.com/adam-hanna/06afe09209589c80ba460662f7dce65c
 https://duckduckgo.com/?q=systemd+logs+cloudwatch&t=osx&ia=web
-automatic certs / route53 records
+automatic certs
 multi-region
+route53 health checks
+ssm

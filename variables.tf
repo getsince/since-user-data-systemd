@@ -1,4 +1,5 @@
 variable "release_url" {}
+variable "release_cookie" {}
 variable "secret_key_base" {}
 variable "host" {}
 variable "port" {}
