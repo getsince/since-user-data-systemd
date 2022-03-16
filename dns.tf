@@ -18,7 +18,7 @@ resource "aws_route53_record" "a" {
 
     # https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resource-record-sets-values-latency-alias.html#rrsets-values-latency-alias-associate-with-health-check
     # https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover-determining-health-of-endpoints.html
-    # evaluate_target_health = true
+    evaluate_target_health = false
   }
 
   latency_routing_policy {
@@ -37,7 +37,7 @@ resource "aws_route53_record" "aaaa" {
     name    = aws_lb.ruslan.dns_name
     zone_id = aws_lb.ruslan.zone_id
 
-    # evaluate_target_health = true
+    evaluate_target_health = false
   }
 
   latency_routing_policy {
