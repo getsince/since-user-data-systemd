@@ -1,5 +1,11 @@
 variable "release_url" {}
 variable "release_cookie" {}
+
+variable "ec2_regions" {
+  type = list(string)
+}
+
+variable "primary_host_prefix" {}
 variable "secret_key_base" {}
 variable "host" {}
 variable "port" {}

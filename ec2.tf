@@ -65,6 +65,7 @@ resource "aws_launch_template" "ruslan" {
   user_data = base64encode(templatefile("user_data.sh.tftpl", {
     release_url           = var.release_url,
     release_cookie        = var.release_cookie,
+    primary_host_prefix   = var.primary_host_prefix,
     secret_key_base       = var.secret_key_base
     host                  = var.host,
     port                  = var.port,
@@ -72,6 +73,7 @@ resource "aws_launch_template" "ruslan" {
     dashboard_password    = var.dashboard_password,
     admin_id              = var.admin_id,
     ec2_name              = var.ec2_name,
+    ec2_regions           = join(",", var.ec2_regions)
     imgproxy_prefix       = var.imgproxy_prefix,
     imgproxy_key          = var.imgproxy_key,
     imgproxy_salt         = var.imgproxy_salt,

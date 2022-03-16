@@ -3,6 +3,10 @@ release_url = "https://github.com/getsince/test3/releases/download/rpc/ubuntu-20
 
 // name is used to connect the cluster
 ec2_name = "since-backend2"
+ec2_regions = ["eu-north-1", "us-east-2"]
+
+// 10.0.0.1/16 (eu-north-1) is the primary region (todo: cidr)
+primary_host_prefix = "10.0."
 
 // used for origin checks
 host = "b3.getsince.app"
