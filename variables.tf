@@ -20,7 +20,8 @@ variable "maxmind_license_key" {}
 variable "tg_bot_key" {}
 variable "tg_room_id" {}
 variable "sentry_dsn" {}
-variable "database_url" {}
+variable "stockholm_database_url" {}
+variable "ohio_database_url" {}
 variable "aws_access_key_id" {}
 variable "aws_secret_access_key" {}
 variable "aws_s3_bucket" {}

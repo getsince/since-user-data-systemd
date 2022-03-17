@@ -2,7 +2,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 3.27"
+      version = "~> 4.5"
     }
   }
 
@@ -11,4 +11,14 @@ terraform {
 
 provider "aws" {
   region = "eu-north-1"
+}
+
+provider "aws" {
+  alias  = "stockholm"
+  region = "eu-north-1"
+}
+
+provider "aws" {
+  alias  = "ohio"
+  region = "us-east-2"
 }
