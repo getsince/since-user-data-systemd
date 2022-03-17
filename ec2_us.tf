@@ -1,4 +1,4 @@
-data "aws_ami" "ubuntu" {
+data "aws_ami" "ubuntu_ohio" {
   most_recent = true
 
   filter {
@@ -12,11 +12,13 @@ data "aws_ami" "ubuntu" {
   }
 
   owners = ["099720109477"]
+
+  provider = aws.ohio
 }
 
-resource "aws_launch_template" "ruslan" {
+resource "aws_launch_template" "ruslan_ohio" {
   name_prefix = "ruslan-"
-  image_id    = data.aws_ami.ubuntu.id
+  image_id    = data.aws_ami.ubuntu_ohio.id
 
   # cpu mode = standard
 
@@ -29,7 +31,7 @@ resource "aws_launch_template" "ruslan" {
   }
 
   instance_type = "t3.micro"
-  key_name      = "since"
+  # key_name      = "since"
 
   # TODO
   instance_initiated_shutdown_behavior = "terminate"
@@ -43,10 +45,9 @@ resource "aws_launch_template" "ruslan" {
     associate_public_ip_address = true
 
     security_groups = [
-      aws_security_group.ruslan_ssh.id,
-      # 10.0.0.0/16 <-> 10.1.0.0/16
-      "sg-0b1af722955d3a5da",
-      data.aws_security_group.since.id
+      # aws_security_group.ruslan_ssh.id,
+      "sg-0ffdda2de6b12d17d", # allows traffic from 10.0.0.0/16
+      data.aws_security_group.since_ohio.id
     ]
   }
 
@@ -83,7 +84,7 @@ resource "aws_launch_template" "ruslan" {
     tg_bot_key            = var.tg_bot_key,
     tg_room_id            = var.tg_room_id,
     sentry_dsn            = var.sentry_dsn,
-    database_url          = var.stockholm_database_url,
+    database_url          = var.ohio_database_url,
     aws_access_key_id     = var.aws_access_key_id,
     aws_secret_access_key = var.aws_secret_access_key,
     aws_s3_bucket         = var.aws_s3_bucket,
@@ -106,13 +107,15 @@ resource "aws_launch_template" "ruslan" {
   lifecycle {
     create_before_destroy = true
   }
+
+  provider = aws.ohio
 }
 
-resource "aws_autoscaling_group" "ruslan" {
+resource "aws_autoscaling_group" "ruslan_ohio" {
   name = "ruslan"
 
   launch_template {
-    id      = aws_launch_template.ruslan.id
+    id      = aws_launch_template.ruslan_ohio.id
     version = "$Latest"
   }
 
@@ -121,17 +124,19 @@ resource "aws_autoscaling_group" "ruslan" {
   max_size         = 10
 
   target_group_arns = [
-    aws_lb_target_group.ruslan.arn
+    aws_lb_target_group.ruslan_ohio.arn
   ]
 
   health_check_grace_period = 30
   health_check_type         = "ELB"
 
-  vpc_zone_identifier = data.aws_subnets.since.ids
+  vpc_zone_identifier = data.aws_subnets.since_ohio.ids
 
   lifecycle {
     create_before_destroy = true
   }
+
+  provider = aws.ohio
 }
 
 # data "aws_instances" "ruslan" {

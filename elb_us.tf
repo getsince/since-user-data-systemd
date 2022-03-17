@@ -1,21 +1,23 @@
-resource "aws_lb" "ruslan" {
+resource "aws_lb" "ruslan_ohio" {
   name     = "ruslan"
   internal = false
 
   load_balancer_type = "application"
 
   security_groups = [
-    data.aws_security_group.since.id,
-    aws_security_group.lb.id
+    data.aws_security_group.since_ohio.id,
+    aws_security_group.lb_ohio.id
   ]
 
-  subnets = data.aws_subnets.since.ids
+  subnets = data.aws_subnets.since_ohio.ids
+
+  provider = aws.ohio
 }
 
-resource "aws_security_group" "lb" {
+resource "aws_security_group" "lb_ohio" {
   name        = "ruslan_lb_security_group"
   description = "Allow all inbound and outbound traffic"
-  vpc_id      = data.aws_vpc.since.id
+  vpc_id      = data.aws_vpc.since_ohio.id
 
   ingress {
     from_port   = 0
@@ -38,10 +40,12 @@ resource "aws_security_group" "lb" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  provider = aws.ohio
 }
 
-resource "aws_lb_listener" "http" {
-  load_balancer_arn = aws_lb.ruslan.arn
+resource "aws_lb_listener" "http_ohio" {
+  load_balancer_arn = aws_lb.ruslan_ohio.arn
   port              = "80"
   protocol          = "HTTP"
 
@@ -57,24 +61,28 @@ resource "aws_lb_listener" "http" {
       status_code = "HTTP_301"
     }
   }
+
+  provider = aws.ohio
 }
 
-resource "aws_lb_listener" "https" {
-  load_balancer_arn = aws_lb.ruslan.arn
+resource "aws_lb_listener" "https_ohio" {
+  load_balancer_arn = aws_lb.ruslan_ohio.arn
   port              = "443"
   protocol          = "HTTPS"
 
   ssl_policy = "ELBSecurityPolicy-2016-08"
   # TODO
-  certificate_arn = "arn:aws:acm:eu-north-1:154782911265:certificate/3cb4cc26-c768-4ab0-a3aa-3023c772edf0"
+  certificate_arn = "arn:aws:acm:us-east-2:154782911265:certificate/c2bbe26e-1ead-4dc5-bb5d-2088592dbd43"
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.ruslan.arn
+    target_group_arn = aws_lb_target_group.ruslan_ohio.arn
   }
+
+  provider = aws.ohio
 }
 
-resource "aws_lb_target_group" "ruslan" {
+resource "aws_lb_target_group" "ruslan_ohio" {
   name = "ruslan"
   port = var.port
 
@@ -85,7 +93,7 @@ resource "aws_lb_target_group" "ruslan" {
 
   deregistration_delay = 10
 
-  vpc_id      = data.aws_vpc.since.id
+  vpc_id      = data.aws_vpc.since_ohio.id
   target_type = "instance"
 
   health_check {
@@ -95,4 +103,6 @@ resource "aws_lb_target_group" "ruslan" {
     path                = "/health"
     # port todo
   }
+
+  provider = aws.ohio
 }

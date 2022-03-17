@@ -2,11 +2,25 @@ data "aws_vpc" "since" {
   cidr_block = "10.0.0.0/16"
 }
 
+data "aws_vpc" "since_ohio" {
+  cidr_block = "10.1.0.0/16"
+  provider   = aws.ohio
+}
+
 data "aws_subnets" "since" {
   filter {
     name   = "vpc-id"
     values = [data.aws_vpc.since.id]
   }
+}
+
+data "aws_subnets" "since_ohio" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.since_ohio.id]
+  }
+
+  provider = aws.ohio
 }
 
 # 10.0.0.0/16 <-> 10.0.0.0/16
@@ -17,6 +31,18 @@ data "aws_security_group" "since" {
   }
 
   name = "default"
+}
+
+# 10.1.0.0/16 <-> 10.1.0.0/16
+data "aws_security_group" "since_ohio" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.since_ohio.id]
+  }
+
+  name = "default"
+
+  provider = aws.ohio
 }
 
 resource "aws_security_group" "ruslan_ssh" {
