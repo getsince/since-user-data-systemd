@@ -75,7 +75,6 @@ resource "aws_launch_template" "ruslan" {
     port                  = var.port,
     dashboard_username    = var.dashboard_username,
     dashboard_password    = var.dashboard_password,
-    admin_id              = var.admin_id,
     ec2_name              = var.ec2_name,
     ec2_regions           = join(",", var.ec2_regions)
     imgproxy_prefix       = var.imgproxy_prefix,
