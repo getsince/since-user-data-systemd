@@ -112,9 +112,15 @@ resource "aws_autoscaling_group" "ruslan" {
   name = "ruslan"
 
   launch_template {
-    id      = aws_launch_template.ruslan.id
-    version = "$Latest"
+    id = aws_launch_template.ruslan.id
+    # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_group#instance_refresh
+    # A refresh will not start when version = "$Latest" is configured in the launch_template block.
+    # To trigger the instance refresh when a launch template is changed, configure version to
+    # use the latest_version attribute of the aws_launch_template resource.
+    version = aws_launch_template.ruslan.latest_version
   }
+
+  capacity_rebalance = true
 
   min_size         = 1
   desired_capacity = 2
@@ -128,6 +134,10 @@ resource "aws_autoscaling_group" "ruslan" {
   health_check_type         = "ELB"
 
   vpc_zone_identifier = data.aws_subnets.since.ids
+
+  instance_refresh {
+    strategy = "Rolling"
+  }
 
   lifecycle {
     create_before_destroy = true
