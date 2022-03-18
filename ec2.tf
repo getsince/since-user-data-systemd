@@ -18,7 +18,9 @@ resource "aws_launch_template" "ruslan" {
   name_prefix = "ruslan-"
   image_id    = data.aws_ami.ubuntu.id
 
-  # cpu mode = standard
+  credit_specification {
+    cpu_credits = "standard"
+  }
 
   instance_market_options {
     market_type = "spot"
