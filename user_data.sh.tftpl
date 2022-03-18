@@ -59,7 +59,8 @@ chown -R test3:test3 /var/lib/test3
 
 cat > /usr/local/bin/test3 << EOM
 #!/bin/bash
-export RELEASE_NODE=$RELEASE_NODE
+RELEASE_NODE=$RELEASE_NODE
+RELEASE_COOKIE=${release_cookie}
 /opt/test3/bin/t \$@
 EOM
 
