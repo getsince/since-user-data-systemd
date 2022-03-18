@@ -28,9 +28,6 @@ variable "aws_s3_bucket" {}
 variable "aws_s3_bucket_static" {}
 variable "static_cdn" {}
 variable "aws_s3_bucket_events" {}
-variable "twilio_account_sid" {}
-variable "twilio_key_sid" {}
-variable "twilio_auth_token" {}
 variable "apns_topic" {}
 variable "apns_team_id" {}
 variable "prod_apns_key_id" {}

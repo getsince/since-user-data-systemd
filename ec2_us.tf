@@ -91,9 +91,6 @@ resource "aws_launch_template" "ruslan_ohio" {
     aws_s3_bucket_static  = var.aws_s3_bucket_static,
     static_cdn            = var.static_cdn,
     aws_s3_bucket_events  = var.aws_s3_bucket_events,
-    twilio_account_sid    = var.twilio_account_sid,
-    twilio_key_sid        = var.twilio_key_sid,
-    twilio_auth_token     = var.twilio_auth_token,
     apns_topic            = var.apns_topic,
     apns_team_id          = var.apns_team_id,
     prod_apns_key_id      = var.prod_apns_key_id,
@@ -115,9 +112,15 @@ resource "aws_autoscaling_group" "ruslan_ohio" {
   name = "ruslan"
 
   launch_template {
-    id      = aws_launch_template.ruslan_ohio.id
-    version = "$Latest"
+    id = aws_launch_template.ruslan_ohio.id
+    # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_group#instance_refresh
+    # A refresh will not start when version = "$Latest" is configured in the launch_template block.
+    # To trigger the instance refresh when a launch template is changed, configure version to
+    # use the latest_version attribute of the aws_launch_template resource.
+    version = aws_launch_template.ruslan.latest_version
   }
+
+  capacity_rebalance = true
 
   min_size         = 1
   desired_capacity = 2
@@ -131,6 +134,10 @@ resource "aws_autoscaling_group" "ruslan_ohio" {
   health_check_type         = "ELB"
 
   vpc_zone_identifier = data.aws_subnets.since_ohio.ids
+
+  instance_refresh {
+    strategy = "Rolling"
+  }
 
   lifecycle {
     create_before_destroy = true
