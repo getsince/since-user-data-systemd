@@ -11,7 +11,6 @@ variable "host" {}
 variable "port" {}
 variable "dashboard_username" {}
 variable "dashboard_password" {}
-variable "admin_id" {}
 variable "ec2_name" {}
 variable "imgproxy_prefix" {}
 variable "imgproxy_key" {}
