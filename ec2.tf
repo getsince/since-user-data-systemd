@@ -64,7 +64,6 @@ resource "aws_launch_template" "ruslan" {
     }
   }
 
-  # TODO force instance refresh on change
   # TODO this is visible in tfstate
   user_data = base64encode(templatefile("user_data.sh.tftpl", {
     release_url           = var.release_url,
