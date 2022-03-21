@@ -72,7 +72,7 @@ resource "aws_lb_listener" "https_ohio" {
 
   ssl_policy = "ELBSecurityPolicy-2016-08"
   # TODO
-  certificate_arn = "arn:aws:acm:us-east-2:154782911265:certificate/c2bbe26e-1ead-4dc5-bb5d-2088592dbd43"
+  certificate_arn = "arn:aws:acm:us-east-2:154782911265:certificate/8032fe1f-7f7d-4c6b-89ca-ba687020de1a"
 
   default_action {
     type             = "forward"

@@ -66,7 +66,7 @@ resource "aws_lb_listener" "https" {
 
   ssl_policy = "ELBSecurityPolicy-2016-08"
   # TODO
-  certificate_arn = "arn:aws:acm:eu-north-1:154782911265:certificate/3cb4cc26-c768-4ab0-a3aa-3023c772edf0"
+  certificate_arn = "arn:aws:acm:eu-north-1:154782911265:certificate/6f6dc63b-9d52-4e6c-ae7e-69a8d76476bb"
 
   default_action {
     type             = "forward"
