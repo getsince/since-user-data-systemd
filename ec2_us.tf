@@ -119,7 +119,7 @@ resource "aws_autoscaling_group" "ruslan_ohio" {
     # A refresh will not start when version = "$Latest" is configured in the launch_template block.
     # To trigger the instance refresh when a launch template is changed, configure version to
     # use the latest_version attribute of the aws_launch_template resource.
-    version = aws_launch_template.ruslan.latest_version
+    version = aws_launch_template.ruslan_ohio.latest_version
   }
 
   capacity_rebalance = true

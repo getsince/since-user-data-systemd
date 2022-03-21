@@ -22,13 +22,13 @@ resource "aws_launch_template" "ruslan" {
     cpu_credits = "standard"
   }
 
-  instance_market_options {
-    market_type = "spot"
+  # instance_market_options {
+  #   market_type = "spot"
 
-    # spot_options {
-    #   spot_instance_type = "persistent"
-    # }
-  }
+  #   # spot_options {
+  #   #   spot_instance_type = "persistent"
+  #   # }
+  # }
 
   instance_type = "t3.micro"
   key_name      = "since"
@@ -109,13 +109,55 @@ resource "aws_launch_template" "ruslan" {
 resource "aws_autoscaling_group" "ruslan" {
   name = "ruslan"
 
-  launch_template {
-    id = aws_launch_template.ruslan.id
-    # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_group#instance_refresh
-    # A refresh will not start when version = "$Latest" is configured in the launch_template block.
-    # To trigger the instance refresh when a launch template is changed, configure version to
-    # use the latest_version attribute of the aws_launch_template resource.
-    version = aws_launch_template.ruslan.latest_version
+  mixed_instances_policy {
+    instances_distribution {
+      on_demand_base_capacity                  = 0
+      on_demand_percentage_above_base_capacity = 0
+
+      spot_allocation_strategy = "capacity-optimized-prioritized"
+      spot_instance_pools      = 0
+    }
+
+    launch_template {
+      launch_template_specification {
+        launch_template_id = aws_launch_template.ruslan.id
+        # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_group#instance_refresh
+        # A refresh will not start when version = "$Latest" is configured in the launch_template block.
+        # To trigger the instance refresh when a launch template is changed, configure version to
+        # use the latest_version attribute of the aws_launch_template resource.
+        version = aws_launch_template.ruslan.latest_version
+      }
+
+      # TODO t4g with erlang-25
+
+      override {
+        instance_type = "t3.micro"
+      }
+
+      override {
+        instance_type = "t2.micro"
+      }
+
+      override {
+        instance_type = "t3.small"
+      }
+
+      override {
+        instance_type = "t2.small"
+      }
+
+      override {
+        instance_type = "c5a.large"
+      }
+
+      override {
+        instance_type = "c5.large"
+      }
+
+      override {
+        instance_type = "c4.large"
+      }
+    }
   }
 
   capacity_rebalance = true
