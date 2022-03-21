@@ -9,7 +9,7 @@ ec2_regions = ["eu-north-1", "us-east-2"]
 primary_host_prefix = "10.0."
 
 // used in links and for origin checks
-host = "b.getsince.app"
+host         = "b.getsince.app"
 check_origin = "//*.getsince.app"
 
 // port to bind to
