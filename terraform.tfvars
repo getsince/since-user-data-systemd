@@ -1,5 +1,5 @@
 // see https://github.com/getsince/test3/releases 
-release_url = "https://github.com/getsince/test3/releases/download/distance/ubuntu-20-04-amd64.tar.gz"
+release_url = "https://github.com/getsince/test3/releases/download/origin/ubuntu-20-04-amd64.tar.gz"
 
 // name is used to connect the cluster
 ec2_name    = "since-backend2"
@@ -8,8 +8,9 @@ ec2_regions = ["eu-north-1", "us-east-2"]
 // 10.0.0.1/16 (eu-north-1) is the primary region (todo: cidr)
 primary_host_prefix = "10.0."
 
-// used for origin checks
+// used in links and for origin checks
 host = "b.getsince.app"
+check_origin = "//*.getsince.app"
 
 // port to bind to
 port = "5000"

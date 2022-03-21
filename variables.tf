@@ -8,6 +8,7 @@ variable "ec2_regions" {
 variable "primary_host_prefix" {}
 variable "secret_key_base" {}
 variable "host" {}
+variable "check_origin" {}
 variable "port" {}
 variable "dashboard_username" {}
 variable "dashboard_password" {}

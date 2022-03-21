@@ -73,6 +73,7 @@ resource "aws_launch_template" "ruslan_ohio" {
     primary_host_prefix   = var.primary_host_prefix,
     secret_key_base       = var.secret_key_base
     host                  = var.host,
+    check_origin          = var.check_origin,
     port                  = var.port,
     dashboard_username    = var.dashboard_username,
     dashboard_password    = var.dashboard_password,
