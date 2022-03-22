@@ -1,53 +1,57 @@
-data "aws_vpc" "since" {
-  cidr_block = "10.0.0.0/16"
-}
+module "vpc_stockholm" {
+  source = "./vpc"
 
-data "aws_vpc" "since_ohio" {
-  cidr_block = "10.1.0.0/16"
-  provider   = aws.ohio
-}
+  cidr = "10.0.0.0/16"
 
-data "aws_subnets" "since" {
-  filter {
-    name   = "vpc-id"
-    values = [data.aws_vpc.since.id]
+  providers = {
+    aws = aws.stockholm
   }
 }
 
-data "aws_subnets" "since_ohio" {
-  filter {
-    name   = "vpc-id"
-    values = [data.aws_vpc.since_ohio.id]
-  }
+module "vpc_ohio" {
+  source = "./vpc"
 
-  provider = aws.ohio
+  cidr = "10.1.0.0/16"
+
+  providers = {
+    aws = aws.ohio
+  }
 }
 
-# 10.0.0.0/16 <-> 10.0.0.0/16
-data "aws_security_group" "since" {
-  filter {
-    name   = "vpc-id"
-    values = [data.aws_vpc.since.id]
-  }
+module "vpc_north_california" {
+  source = "./vpc"
 
-  name = "default"
+  cidr = "10.2.0.0/16"
+
+  providers = {
+    aws = aws.north_california
+  }
 }
 
-# 10.1.0.0/16 <-> 10.1.0.0/16
-data "aws_security_group" "since_ohio" {
-  filter {
-    name   = "vpc-id"
-    values = [data.aws_vpc.since_ohio.id]
+module "vpc_sydney" {
+  source = "./vpc"
+
+  cidr = "10.3.0.0/16"
+
+  providers = {
+    aws = aws.sydney
   }
-
-  name = "default"
-
-  provider = aws.ohio
 }
 
+module "vpc_sao_paulo" {
+  source = "./vpc"
+
+  cidr = "10.4.0.0/16"
+
+  providers = {
+    aws = aws.sao_paulo
+  }
+}
+
+# TODO remove
 resource "aws_security_group" "ruslan_ssh" {
   name   = "ruslan_ssh2"
-  vpc_id = data.aws_vpc.since.id
+  vpc_id = module.vpc_stockholm.vpc_id
 
   ingress {
     from_port   = 22
@@ -62,4 +66,6 @@ resource "aws_security_group" "ruslan_ssh" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  provider = aws.stockholm
 }

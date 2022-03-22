@@ -5,80 +5,82 @@ data "aws_route53_zone" "getsince" {
 # # TODO aws_route53_health_check
 # # TODO failover_routing_policy?
 
-resource "aws_route53_record" "a" {
-  zone_id = data.aws_route53_zone.getsince.zone_id
-  name    = var.host
-  type    = "A"
+module "dns_stockholm" {
+  source = "./dns"
 
-  set_identifier = "backend/lb/a/eu-north-1"
+  route53_zone_id = data.aws_route53_zone.getsince.zone_id
 
-  alias {
-    name    = aws_lb.ruslan.dns_name
-    zone_id = aws_lb.ruslan.zone_id
+  lb_dns_name = module.lb_stockholm.dns_name
+  lb_zone_id  = module.lb_stockholm.zone_id
 
-    # https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resource-record-sets-values-latency-alias.html#rrsets-values-latency-alias-associate-with-health-check
-    # https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover-determining-health-of-endpoints.html
-    evaluate_target_health = true
-  }
+  host   = var.host
+  region = "eu-north-1"
 
-  latency_routing_policy {
-    region = "eu-north-1"
+  providers = {
+    aws = aws.stockholm
   }
 }
 
-resource "aws_route53_record" "aaaa" {
-  zone_id = data.aws_route53_zone.getsince.zone_id
-  name    = var.host
-  type    = "AAAA"
+module "dns_ohio" {
+  source = "./dns"
 
-  set_identifier = "backend/lb/aaaa/eu-north-1"
+  route53_zone_id = data.aws_route53_zone.getsince.zone_id
 
-  alias {
-    name    = aws_lb.ruslan.dns_name
-    zone_id = aws_lb.ruslan.zone_id
+  lb_dns_name = module.lb_ohio.dns_name
+  lb_zone_id  = module.lb_ohio.zone_id
 
-    evaluate_target_health = true
-  }
+  host   = var.host
+  region = "us-east-2"
 
-  latency_routing_policy {
-    region = "eu-north-1"
+  providers = {
+    aws = aws.ohio
   }
 }
 
-resource "aws_route53_record" "a_us" {
-  zone_id = data.aws_route53_zone.getsince.zone_id
-  name    = var.host
-  type    = "A"
+module "dns_north_california" {
+  source = "./dns"
 
-  set_identifier = "backend/lb/a/us-east-2"
+  route53_zone_id = data.aws_route53_zone.getsince.zone_id
 
-  alias {
-    name    = aws_lb.ruslan_ohio.dns_name
-    zone_id = aws_lb.ruslan_ohio.zone_id
+  lb_dns_name = module.lb_north_california.dns_name
+  lb_zone_id  = module.lb_north_california.zone_id
 
-    evaluate_target_health = true
-  }
+  host   = var.host
+  region = "us-west-1"
 
-  latency_routing_policy {
-    region = "us-east-2"
+  providers = {
+    aws = aws.north_california
   }
 }
 
-resource "aws_route53_record" "aaaa_us" {
-  zone_id = data.aws_route53_zone.getsince.zone_id
-  name    = var.host
-  type    = "AAAA"
+module "dns_sydney" {
+  source = "./dns"
 
-  set_identifier = "backend/lb/aaaa/us-east-2"
+  route53_zone_id = data.aws_route53_zone.getsince.zone_id
 
-  alias {
-    name    = aws_lb.ruslan_ohio.dns_name
-    zone_id = aws_lb.ruslan_ohio.zone_id
+  lb_dns_name = module.lb_sydney.dns_name
+  lb_zone_id  = module.lb_sydney.zone_id
 
-    evaluate_target_health = true
+  host   = var.host
+  region = "ap-southeast-2"
+
+  providers = {
+    aws = aws.sydney
   }
+}
 
-  latency_routing_policy {
-    region = "us-east-2"
+module "dns_sao_paulo" {
+  source = "./dns"
+
+  route53_zone_id = data.aws_route53_zone.getsince.zone_id
+
+  lb_dns_name = module.lb_sao_paulo.dns_name
+  lb_zone_id  = module.lb_sao_paulo.zone_id
+
+  host   = var.host
+  region = "sa-east-1"
+
+  providers = {
+    aws = aws.sao_paulo
   }
 }

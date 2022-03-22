@@ -1,21 +1,22 @@
-resource "aws_lb" "ruslan" {
-  name     = "ruslan"
-  internal = false
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 4.5"
+    }
+  }
 
-  load_balancer_type = "application"
-
-  security_groups = [
-    data.aws_security_group.since.id,
-    aws_security_group.lb.id
-  ]
-
-  subnets = data.aws_subnets.since.ids
+  required_version = "~> 1.1"
 }
 
 resource "aws_security_group" "lb" {
-  name        = "ruslan_lb_security_group"
+  name_prefix = "since-backend-lb-"
   description = "Allow all inbound and outbound traffic"
-  vpc_id      = data.aws_vpc.since.id
+  vpc_id      = var.vpc_id
+
+  tags = {
+    Name = "since-backend-lb"
+  }
 
   ingress {
     from_port   = 0
@@ -24,7 +25,7 @@ resource "aws_security_group" "lb" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  # need to split "::/0" accorting to https://github.com/hashicorp/terraform/issues/14382#issuecomment-300769009
+  # need to split "::/0" according to https://github.com/hashicorp/terraform/issues/14382#issuecomment-300769009
   ingress {
     from_port        = 0
     to_port          = 0
@@ -40,8 +41,22 @@ resource "aws_security_group" "lb" {
   }
 }
 
+resource "aws_lb" "this" {
+  name     = "since-backend"
+  internal = false
+
+  load_balancer_type = "application"
+
+  security_groups = [
+    var.default_security_group,
+    aws_security_group.lb.id
+  ]
+
+  subnets = var.subnets
+}
+
 resource "aws_lb_listener" "http" {
-  load_balancer_arn = aws_lb.ruslan.arn
+  load_balancer_arn = aws_lb.this.arn
   port              = "80"
   protocol          = "HTTP"
 
@@ -60,23 +75,22 @@ resource "aws_lb_listener" "http" {
 }
 
 resource "aws_lb_listener" "https" {
-  load_balancer_arn = aws_lb.ruslan.arn
+  load_balancer_arn = aws_lb.this.arn
   port              = "443"
   protocol          = "HTTPS"
 
-  ssl_policy = "ELBSecurityPolicy-2016-08"
-  # TODO
-  certificate_arn = "arn:aws:acm:eu-north-1:154782911265:certificate/6f6dc63b-9d52-4e6c-ae7e-69a8d76476bb"
+  ssl_policy      = "ELBSecurityPolicy-2016-08"
+  certificate_arn = var.certificate_arn
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.ruslan.arn
+    target_group_arn = aws_lb_target_group.api.arn
   }
 }
 
-resource "aws_lb_target_group" "ruslan" {
-  name = "ruslan"
-  port = var.port
+resource "aws_lb_target_group" "api" {
+  name = "since-backend-api"
+  port = var.target_port
 
   protocol = "HTTP"
   # safari WS fails to connect with status_code=464 on HTTP2
@@ -85,7 +99,7 @@ resource "aws_lb_target_group" "ruslan" {
 
   deregistration_delay = 10
 
-  vpc_id      = data.aws_vpc.since.id
+  vpc_id      = var.vpc_id
   target_type = "instance"
 
   health_check {
@@ -93,6 +107,6 @@ resource "aws_lb_target_group" "ruslan" {
     unhealthy_threshold = 2
     interval            = 10
     path                = "/health"
-    # port todo
+    # TODO port
   }
 }
