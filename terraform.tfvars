@@ -3,12 +3,12 @@ release_url = "https://github.com/getsince/test3/releases/download/staging/ubunt
 
 // name is used to connect the cluster
 ec2_name    = "since-backend2"
-ec2_regions = ["eu-north-1", "us-east-2"]
+ec2_regions = ["eu-north-1", "us-east-2", "us-west-1", "ap-southeast-2", "sa-east-1"]
 
 // 10.0.0.1/16 (eu-north-1) is the primary region (todo: cidr)
 primary_host_prefix = "10.0."
 
-// used in links and for origin checks
+// used in links and origin checks
 host         = "b.getsince.app"
 check_origin = "//*.getsince.app"
 

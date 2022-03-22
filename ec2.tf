@@ -1,71 +1,7 @@
-data "aws_ami" "ubuntu" {
-  most_recent = true
+# TODO t4g with erlang-25
 
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-
-  owners = ["099720109477"]
-}
-
-resource "aws_launch_template" "ruslan" {
-  name_prefix = "ruslan-"
-  image_id    = data.aws_ami.ubuntu.id
-
-  credit_specification {
-    cpu_credits = "standard"
-  }
-
-  # instance_market_options {
-  #   market_type = "spot"
-
-  #   # spot_options {
-  #   #   spot_instance_type = "persistent"
-  #   # }
-  # }
-
-  instance_type = "t3.micro"
-  key_name      = "since"
-
-  # TODO
-  instance_initiated_shutdown_behavior = "terminate"
-
-  # iam_instance_profile {
-  #   name = "test"
-  # }
-
-  # TODO
-  network_interfaces {
-    associate_public_ip_address = true
-
-    security_groups = [
-      aws_security_group.ruslan_ssh.id,
-      # 10.0.0.0/16 <-> 10.1.0.0/16
-      "sg-0b1af722955d3a5da",
-      data.aws_security_group.since.id
-    ]
-  }
-
-  # monitoring {
-  #   enabled = true
-  # }
-
-  tag_specifications {
-    resource_type = "instance"
-
-    tags = {
-      Name = var.ec2_name
-    }
-  }
-
-  # TODO this is visible in tfstate
-  user_data = base64encode(templatefile("user_data.sh.tftpl", {
+locals {
+  user_data_base64 = base64encode(templatefile("user_data.sh.tftpl", {
     release_url           = var.release_url,
     release_cookie        = var.release_cookie,
     primary_host_prefix   = var.primary_host_prefix,
@@ -100,97 +36,105 @@ resource "aws_launch_template" "ruslan" {
     phone_home_tg_bot_key = var.phone_home_tg_bot_key,
     phone_home_tg_room_id = var.phone_home_tg_room_id
   }))
+}
 
-  lifecycle {
-    create_before_destroy = true
+module "ec2_stockholm" {
+  source = "./ec2"
+
+  instance_name       = var.ec2_name
+  user_data_base64    = local.user_data_base64
+  lb_target_group_arn = module.lb_stockholm.target_group_arn
+  vpc_zone_identifier = module.vpc_stockholm.subnet_ids
+
+  security_groups = concat(
+    [module.vpc_stockholm.default_security_group_id],
+    module.vpc_stockholm.peering_security_group_ids
+    # TODO [aws_security_group.ruslan_ssh.id]
+  )
+
+  instance_types = ["t3.micro", "t3.small", "t2.micro", "t2.small", "c5a.large", "c5.large", "c4.large"]
+
+  providers = {
+    aws = aws.stockholm
   }
 }
 
-resource "aws_autoscaling_group" "ruslan" {
-  name = "ruslan"
+module "ec2_ohio" {
+  source = "./ec2"
 
-  mixed_instances_policy {
-    instances_distribution {
-      on_demand_base_capacity                  = 0
-      on_demand_percentage_above_base_capacity = 0
+  instance_name       = var.ec2_name
+  user_data_base64    = local.user_data_base64
+  lb_target_group_arn = module.lb_ohio.target_group_arn
+  vpc_zone_identifier = module.vpc_ohio.subnet_ids
 
-      spot_allocation_strategy = "capacity-optimized-prioritized"
-      spot_instance_pools      = 0
-    }
+  security_groups = concat(
+    [module.vpc_ohio.default_security_group_id],
+    module.vpc_ohio.peering_security_group_ids
+  )
 
-    launch_template {
-      launch_template_specification {
-        launch_template_id = aws_launch_template.ruslan.id
-        # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_group#instance_refresh
-        # A refresh will not start when version = "$Latest" is configured in the launch_template block.
-        # To trigger the instance refresh when a launch template is changed, configure version to
-        # use the latest_version attribute of the aws_launch_template resource.
-        version = aws_launch_template.ruslan.latest_version
-      }
+  instance_types = ["t3.micro", "t3.small", "t2.micro", "t2.small", "c5a.large", "c5.large", "c4.large"]
 
-      # TODO t4g with erlang-25
-
-      override {
-        instance_type = "t3.micro"
-      }
-
-      override {
-        instance_type = "t2.micro"
-      }
-
-      override {
-        instance_type = "t3.small"
-      }
-
-      override {
-        instance_type = "t2.small"
-      }
-
-      override {
-        instance_type = "c5a.large"
-      }
-
-      override {
-        instance_type = "c5.large"
-      }
-
-      override {
-        instance_type = "c4.large"
-      }
-    }
-  }
-
-  capacity_rebalance = true
-
-  min_size         = 1
-  desired_capacity = 2
-  max_size         = 10
-
-  target_group_arns = [
-    aws_lb_target_group.ruslan.arn
-  ]
-
-  health_check_grace_period = 30
-  health_check_type         = "ELB"
-
-  vpc_zone_identifier = data.aws_subnets.since.ids
-
-  instance_refresh {
-    strategy = "Rolling"
-  }
-
-  lifecycle {
-    create_before_destroy = true
+  providers = {
+    aws = aws.ohio
   }
 }
 
-# data "aws_instances" "ruslan" {
-#   filter {
-#     name   = "tag:Name"
-#     values = [var.ec2_name]
-#   }
-# }
+module "ec2_north_california" {
+  source = "./ec2"
 
-# output "public_ips" {
-#   value = data.aws_instances.ruslan.public_ips
-# }
+  instance_name       = var.ec2_name
+  user_data_base64    = local.user_data_base64
+  lb_target_group_arn = module.lb_north_california.target_group_arn
+  vpc_zone_identifier = module.vpc_north_california.subnet_ids
+
+  security_groups = concat(
+    [module.vpc_north_california.default_security_group_id],
+    module.vpc_north_california.peering_security_group_ids
+  )
+
+  instance_types = ["t3.micro", "t3.small", "t2.micro", "t2.small", "c5a.large", "c5.large", "c4.large"]
+
+  providers = {
+    aws = aws.north_california
+  }
+}
+
+module "ec2_sydney" {
+  source = "./ec2"
+
+  instance_name       = var.ec2_name
+  user_data_base64    = local.user_data_base64
+  lb_target_group_arn = module.lb_sydney.target_group_arn
+  vpc_zone_identifier = module.vpc_sydney.subnet_ids
+
+  security_groups = concat(
+    [module.vpc_sydney.default_security_group_id],
+    module.vpc_sydney.peering_security_group_ids
+  )
+
+  instance_types = ["t3.micro", "t3.small", "t2.micro", "t2.small", "c5a.large", "c5.large", "c4.large"]
+
+  providers = {
+    aws = aws.sydney
+  }
+}
+
+module "ec2_sao_paulo" {
+  source = "./ec2"
+
+  instance_name       = var.ec2_name
+  user_data_base64    = local.user_data_base64
+  lb_target_group_arn = module.lb_sao_paulo.target_group_arn
+  vpc_zone_identifier = module.vpc_sao_paulo.subnet_ids
+
+  security_groups = concat(
+    [module.vpc_sao_paulo.default_security_group_id],
+    module.vpc_sao_paulo.peering_security_group_ids
+  )
+
+  instance_types = ["t3.micro", "t3.small", "t2.micro", "t2.small", "c5a.large", "c5.large", "c4.large"]
+
+  providers = {
+    aws = aws.sao_paulo
+  }
+}
