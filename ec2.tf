@@ -118,6 +118,8 @@ module "ec2_north_california" {
 
   instance_name = var.ec2_name
 
+  desired_capacity = 1
+
   user_data_base64 = base64encode(templatefile("user_data.sh.tftpl", {
     release_url           = var.release_url,
     release_cookie        = var.release_cookie,
@@ -174,6 +176,8 @@ module "ec2_sydney" {
 
   instance_name = var.ec2_name
 
+  desired_capacity = 1
+
   user_data_base64 = base64encode(templatefile("user_data.sh.tftpl", {
     release_url           = var.release_url,
     release_cookie        = var.release_cookie,
@@ -229,6 +233,8 @@ module "ec2_sao_paulo" {
   source = "./ec2"
 
   instance_name = var.ec2_name
+
+  desired_capacity = 1
 
   user_data_base64 = base64encode(templatefile("user_data.sh.tftpl", {
     release_url           = var.release_url,
