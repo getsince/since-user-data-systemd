@@ -50,6 +50,8 @@ module "ec2_stockholm" {
     # TODO [aws_security_group.ruslan_ssh.id]
   )
 
+  on_demand_base_capacity = 1
+
   instance_types = ["t3.micro", "t3.small", "t2.micro", "t2.small", "c5a.large", "c5.large", "c4.large"]
 
   providers = {
