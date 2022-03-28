@@ -15,6 +15,11 @@ variable "max_size" {
   default = 10
 }
 
+variable "on_demand_base_capacity" {
+  type    = number
+  default = 0
+}
+
 variable "user_data_base64" {}
 
 variable "security_groups" {
