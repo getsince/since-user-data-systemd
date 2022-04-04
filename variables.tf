@@ -12,6 +12,7 @@ variable "primary_host_prefix" {}
 variable "secret_key_base" {}
 variable "host" {}
 variable "check_origin" {}
+variable "imgproxy_host" {}
 
 variable "port" {}
 

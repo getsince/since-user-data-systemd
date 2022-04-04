@@ -30,7 +30,9 @@ variable "instance_types" {
   type = list(string)
 }
 
-variable "lb_target_group_arn" {}
+variable "lb_target_group_arns" {
+  type = list(string)
+}
 
 variable "vpc_zone_identifier" {
   type = list(string)
@@ -41,7 +43,7 @@ data "aws_ami" "ubuntu_amd" {
 
   filter {
     name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+    values = ["ubuntu/images/hvm-ssd/ubuntu-impish-21.10-amd64-server-*"]
   }
 
   filter {

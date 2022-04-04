@@ -10,3 +10,8 @@ https://duckduckgo.com/?q=systemd+logs+cloudwatch&t=osx&ia=web
 automatic certs
 route53 health checks
 ssm
+imgproxy logging, sentry, metrics
+poweroff on user_data.sh fail, send notification to tg
+move test3 to podman
+ExecStop=/opt/test3/bin/t stop
+imgproxy v3

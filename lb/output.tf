@@ -1,5 +1,8 @@
-output "target_group_arn" {
-  value = aws_lb_target_group.api.arn
+output "target_group_arns" {
+  value = [
+    aws_lb_target_group.api.arn,
+    aws_lb_target_group.imgproxy.arn
+  ]
 }
 
 output "zone_id" {

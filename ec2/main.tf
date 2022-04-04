@@ -76,9 +76,7 @@ resource "aws_autoscaling_group" "this" {
 
   capacity_rebalance = true
 
-  target_group_arns = [
-    var.lb_target_group_arn
-  ]
+  target_group_arns = var.lb_target_group_arns
 
   health_check_grace_period = 30
   health_check_type         = "ELB"
