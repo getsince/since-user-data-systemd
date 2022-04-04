@@ -141,7 +141,7 @@ resource "aws_lb_target_group" "imgproxy" {
   health_check {
     healthy_threshold   = 2
     unhealthy_threshold = 2
-    interval            = 20
+    interval            = 60
     path                = "/health"
   }
 }
