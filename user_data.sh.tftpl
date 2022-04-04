@@ -4,13 +4,19 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-# TODO poweroff if failes to download, send notification to tg
+LOCAL_IPV4=$(curl http://169.254.169.254/latest/meta-data/local-ipv4)
+
+curl -X POST \
+  -H 'Content-Type: application/json' \
+  -d "{\"chat_id\":\"${phone_home_tg_room_id}\",\"text\":\"$LOCAL_IPV4 starting test3\"}" \
+  'https://api.telegram.org/bot${phone_home_tg_bot_key}/sendMessage'
+
 curl -L '${release_url}' > /tmp/test3.tar.gz
 mkdir /opt/test3
 tar -xf /tmp/test3.tar.gz -C /opt/test3
 rm /tmp/test3.tar.gz
 
-RELEASE_NODE=t@$(curl http://169.254.169.254/latest/meta-data/local-ipv4)
+RELEASE_NODE=t@$LOCAL_IPV4
 
 mkdir /etc/test3
 cat > /etc/test3/env << EOM
@@ -69,7 +75,8 @@ chmod +x /usr/local/bin/test3
 cat > /etc/systemd/system/test3.service << EOM
 [Unit]
 Description=getsince.app backend
-After=network.target
+Wants=network.target
+After=network-online.target
 
 [Service]
 Type=simple
@@ -92,7 +99,47 @@ systemctl start test3
 
 curl -X POST \
   -H 'Content-Type: application/json' \
-  -d "{\"chat_id\": \"${phone_home_tg_room_id}\", \"text\": \"VM started at http://$(curl http://169.254.169.254/latest/meta-data/public-ipv4)\"}" \
+  -d "{\"chat_id\":\"${phone_home_tg_room_id}\",\"text\":\"$LOCAL_IPV4 test3 started\"}" \
+  'https://api.telegram.org/bot${phone_home_tg_bot_key}/sendMessage'
+
+apt-get update
+apt-get install podman -y
+
+cat > /etc/systemd/system/imgproxy.service << EOM
+[Unit]
+Description=imgproxy.server
+Wants=network.target
+After=network-online.target
+RequiresMountsFor=/run/user/1000/containers
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+Restart=on-failure
+ExecStart=/usr/bin/podman run \
+  -e IMGPROXY_LOG_LEVEL=warn \
+  -e IMGPROXY_MAX_SRC_RESOLUTION=100 \
+  -e IMGPROXY_JPEG_PROGRESSIVE=true \
+  -e IMGPROXY_ALLOWED_SOURCES=https://${aws_s3_bucket}.s3.amazonaws.com/ \
+  -e IMGPROXY_KEY=${imgproxy_key} \
+  -e IMGPROXY_SALT=${imgproxy_salt} \
+  --network host \
+  --name imgproxy-%n \
+  docker.io/darthsim/imgproxy:v2
+ExecStopPost=/usr/bin/podman rm imgproxy-%n
+
+[Install]
+WantedBy=multi-user.target
+EOM
+
+systemctl daemon-reload
+systemctl enable imgproxy
+systemctl start imgproxy
+
+curl -X POST \
+  -H 'Content-Type: application/json' \
+  -d "{\"chat_id\":\"${phone_home_tg_room_id}\",\"text\":\"$LOCAL_IPV4 imgproxy started\"}" \
   'https://api.telegram.org/bot${phone_home_tg_bot_key}/sendMessage'
 
 apt-get remove --purge snapd -y

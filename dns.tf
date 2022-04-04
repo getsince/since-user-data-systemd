@@ -84,3 +84,29 @@ module "dns_sao_paulo" {
     aws = aws.sao_paulo
   }
 }
+
+resource "aws_route53_record" "imgproxy_a" {
+  zone_id = data.aws_route53_zone.getsince.zone_id
+  name    = var.imgproxy_host
+  type    = "A"
+
+  alias {
+    name    = module.lb_stockholm.dns_name
+    zone_id = module.lb_stockholm.zone_id
+
+    evaluate_target_health = false
+  }
+}
+
+resource "aws_route53_record" "imgproxy_aaaa" {
+  zone_id = data.aws_route53_zone.getsince.zone_id
+  name    = var.imgproxy_host
+  type    = "AAAA"
+
+  alias {
+    name    = module.lb_stockholm.dns_name
+    zone_id = module.lb_stockholm.zone_id
+
+    evaluate_target_health = false
+  }
+}

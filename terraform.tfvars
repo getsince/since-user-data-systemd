@@ -9,8 +9,9 @@ ec2_regions = ["eu-north-1", "us-east-2", "us-west-1", "ap-southeast-2", "sa-eas
 primary_host_prefix = "10.0."
 
 // used in links and origin checks
-host         = "b.getsince.app"
-check_origin = "//*.getsince.app"
+host          = "b.getsince.app"
+imgproxy_host = "seeing.getsince.app"
+check_origin  = "//*.getsince.app"
 
 // port to bind to
 port = "5000"

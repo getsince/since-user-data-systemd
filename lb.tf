@@ -6,6 +6,7 @@ module "lb_stockholm" {
   default_security_group = module.vpc_stockholm.default_security_group_id
   target_port            = var.port
   certificate_arn        = "arn:aws:acm:eu-north-1:154782911265:certificate/6f6dc63b-9d52-4e6c-ae7e-69a8d76476bb"
+  imgproxy_host          = var.imgproxy_host
 
   providers = {
     aws = aws.stockholm
@@ -20,6 +21,7 @@ module "lb_ohio" {
   default_security_group = module.vpc_ohio.default_security_group_id
   target_port            = var.port
   certificate_arn        = "arn:aws:acm:us-east-2:154782911265:certificate/8032fe1f-7f7d-4c6b-89ca-ba687020de1a"
+  imgproxy_host          = var.imgproxy_host
 
   providers = {
     aws = aws.ohio
@@ -34,6 +36,7 @@ module "lb_north_california" {
   default_security_group = module.vpc_north_california.default_security_group_id
   target_port            = var.port
   certificate_arn        = "arn:aws:acm:us-west-1:154782911265:certificate/7b9b3231-f23b-41d1-994d-0f102cdebaaa"
+  imgproxy_host          = var.imgproxy_host
 
   providers = {
     aws = aws.north_california
@@ -48,6 +51,7 @@ module "lb_sydney" {
   default_security_group = module.vpc_sydney.default_security_group_id
   target_port            = var.port
   certificate_arn        = "arn:aws:acm:ap-southeast-2:154782911265:certificate/e7dff32c-93cb-496d-a385-9db1fd44ba29"
+  imgproxy_host          = var.imgproxy_host
 
   providers = {
     aws = aws.sydney
@@ -62,6 +66,7 @@ module "lb_sao_paulo" {
   default_security_group = module.vpc_sao_paulo.default_security_group_id
   target_port            = var.port
   certificate_arn        = "arn:aws:acm:sa-east-1:154782911265:certificate/4c281480-7200-4459-afd1-7697c1e06826"
+  imgproxy_host          = var.imgproxy_host
 
   providers = {
     aws = aws.sao_paulo

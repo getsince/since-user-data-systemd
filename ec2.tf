@@ -41,8 +41,8 @@ module "ec2_stockholm" {
     phone_home_tg_room_id = var.phone_home_tg_room_id
   }))
 
-  lb_target_group_arn = module.lb_stockholm.target_group_arn
-  vpc_zone_identifier = module.vpc_stockholm.subnet_ids
+  lb_target_group_arns = module.lb_stockholm.target_group_arns
+  vpc_zone_identifier  = module.vpc_stockholm.subnet_ids
 
   security_groups = concat(
     [module.vpc_stockholm.default_security_group_id],
@@ -100,8 +100,8 @@ module "ec2_ohio" {
     phone_home_tg_room_id = var.phone_home_tg_room_id
   }))
 
-  lb_target_group_arn = module.lb_ohio.target_group_arn
-  vpc_zone_identifier = module.vpc_ohio.subnet_ids
+  lb_target_group_arns = module.lb_ohio.target_group_arns
+  vpc_zone_identifier  = module.vpc_ohio.subnet_ids
 
   security_groups = concat(
     [module.vpc_ohio.default_security_group_id],
@@ -158,8 +158,8 @@ module "ec2_north_california" {
     phone_home_tg_room_id = var.phone_home_tg_room_id
   }))
 
-  lb_target_group_arn = module.lb_north_california.target_group_arn
-  vpc_zone_identifier = module.vpc_north_california.subnet_ids
+  lb_target_group_arns = module.lb_north_california.target_group_arns
+  vpc_zone_identifier  = module.vpc_north_california.subnet_ids
 
   security_groups = concat(
     [module.vpc_north_california.default_security_group_id],
@@ -216,8 +216,8 @@ module "ec2_sydney" {
     phone_home_tg_room_id = var.phone_home_tg_room_id
   }))
 
-  lb_target_group_arn = module.lb_sydney.target_group_arn
-  vpc_zone_identifier = module.vpc_sydney.subnet_ids
+  lb_target_group_arns = module.lb_sydney.target_group_arns
+  vpc_zone_identifier  = module.vpc_sydney.subnet_ids
 
   security_groups = concat(
     [module.vpc_sydney.default_security_group_id],
@@ -274,8 +274,8 @@ module "ec2_sao_paulo" {
     phone_home_tg_room_id = var.phone_home_tg_room_id
   }))
 
-  lb_target_group_arn = module.lb_sao_paulo.target_group_arn
-  vpc_zone_identifier = module.vpc_sao_paulo.subnet_ids
+  lb_target_group_arns = module.lb_sao_paulo.target_group_arns
+  vpc_zone_identifier  = module.vpc_sao_paulo.subnet_ids
 
   security_groups = concat(
     [module.vpc_sao_paulo.default_security_group_id],

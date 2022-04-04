@@ -88,6 +88,21 @@ resource "aws_lb_listener" "https" {
   }
 }
 
+resource "aws_lb_listener_rule" "imgproxy" {
+  listener_arn = aws_lb_listener.https.arn
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.imgproxy.arn
+  }
+
+  condition {
+    host_header {
+      values = [var.imgproxy_host]
+    }
+  }
+}
+
 resource "aws_lb_target_group" "api" {
   name = "since-backend-api"
   port = var.target_port
@@ -108,5 +123,25 @@ resource "aws_lb_target_group" "api" {
     interval            = 10
     path                = "/health"
     # TODO port
+  }
+}
+
+resource "aws_lb_target_group" "imgproxy" {
+  name = "since-imgproxy"
+  port = 8080
+
+  protocol         = "HTTP"
+  protocol_version = "HTTP1"
+
+  deregistration_delay = 10
+
+  vpc_id      = var.vpc_id
+  target_type = "instance"
+
+  health_check {
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+    interval            = 20
+    path                = "/health"
   }
 }
