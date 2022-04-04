@@ -99,7 +99,7 @@ systemctl start test3
 
 curl -X POST \
   -H 'Content-Type: application/json' \
-  -d "{\"chat_id\":\"${phone_home_tg_room_id}\",\"text\":\"$LOCAL_IPV4 test3 started\"}" \
+  -d "{\"chat_id\":\"${phone_home_tg_room_id}\",\"text\":\"$LOCAL_IPV4:${port} test3 started\"}" \
   'https://api.telegram.org/bot${phone_home_tg_bot_key}/sendMessage'
 
 apt-get update
@@ -139,7 +139,8 @@ systemctl start imgproxy
 
 curl -X POST \
   -H 'Content-Type: application/json' \
-  -d "{\"chat_id\":\"${phone_home_tg_room_id}\",\"text\":\"$LOCAL_IPV4 imgproxy started\"}" \
+  -d "{\"chat_id\":\"${phone_home_tg_room_id}\",\"text\":\"$LOCAL_IPV4:8080 imgproxy started\"}" \
   'https://api.telegram.org/bot${phone_home_tg_bot_key}/sendMessage'
 
 apt-get remove --purge snapd -y
+apt-get autoremove
