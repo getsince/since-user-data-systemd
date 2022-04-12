@@ -14,7 +14,7 @@ resource "aws_launch_template" "this" {
   image_id    = data.aws_ami.ubuntu_amd.id
 
   instance_type = "t3.micro"
-  key_name      = "ruslan@aws"
+  key_name      = "rail@aws"
 
   user_data = var.user_data_base64
 
