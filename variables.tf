@@ -41,6 +41,8 @@ variable "aws_secret_access_key" {}
 variable "aws_s3_bucket" {}
 variable "aws_s3_bucket_static" {}
 variable "static_cdn" {}
+variable "aws_s3_bucket_media" {}
+variable "media_cdn" {}
 variable "aws_s3_bucket_events" {}
 
 variable "apns_topic" {}
