@@ -45,6 +45,9 @@ variable "aws_s3_bucket_media" {}
 variable "media_cdn" {}
 variable "aws_s3_bucket_events" {}
 
+variable "spotify_client_id" {}
+variable "spotify_client_secret" {}
+
 variable "apns_topic" {}
 variable "apns_team_id" {}
 
