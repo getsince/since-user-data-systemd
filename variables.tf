@@ -58,3 +58,6 @@ variable "sandbox_apns_key" {}
 
 variable "phone_home_tg_bot_key" {}
 variable "phone_home_tg_room_id" {}
+
+variable "algo_gist_url" {}
+variable "feed_key" {}

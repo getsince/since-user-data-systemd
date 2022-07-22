@@ -42,7 +42,9 @@ module "ec2_stockholm" {
     sandbox_apns_key_id   = var.sandbox_apns_key_id,
     sandbox_apns_key      = var.sandbox_apns_key,
     phone_home_tg_bot_key = var.phone_home_tg_bot_key,
-    phone_home_tg_room_id = var.phone_home_tg_room_id
+    phone_home_tg_room_id = var.phone_home_tg_room_id,
+    algo_gist_url         = var.algo_gist_url,
+    feed_key              = var.feed_key
   }))
 
   lb_target_group_arns = module.lb_stockholm.target_group_arns
@@ -105,7 +107,9 @@ module "ec2_ohio" {
     sandbox_apns_key_id   = var.sandbox_apns_key_id,
     sandbox_apns_key      = var.sandbox_apns_key,
     phone_home_tg_bot_key = var.phone_home_tg_bot_key,
-    phone_home_tg_room_id = var.phone_home_tg_room_id
+    phone_home_tg_room_id = var.phone_home_tg_room_id,
+    algo_gist_url         = var.algo_gist_url,
+    feed_key              = var.feed_key
   }))
 
   lb_target_group_arns = module.lb_ohio.target_group_arns
@@ -167,7 +171,9 @@ module "ec2_north_california" {
     sandbox_apns_key_id   = var.sandbox_apns_key_id,
     sandbox_apns_key      = var.sandbox_apns_key,
     phone_home_tg_bot_key = var.phone_home_tg_bot_key,
-    phone_home_tg_room_id = var.phone_home_tg_room_id
+    phone_home_tg_room_id = var.phone_home_tg_room_id,
+    algo_gist_url         = var.algo_gist_url,
+    feed_key              = var.feed_key
   }))
 
   lb_target_group_arns = module.lb_north_california.target_group_arns
@@ -229,7 +235,9 @@ module "ec2_sydney" {
     sandbox_apns_key_id   = var.sandbox_apns_key_id,
     sandbox_apns_key      = var.sandbox_apns_key,
     phone_home_tg_bot_key = var.phone_home_tg_bot_key,
-    phone_home_tg_room_id = var.phone_home_tg_room_id
+    phone_home_tg_room_id = var.phone_home_tg_room_id,
+    algo_gist_url         = var.algo_gist_url,
+    feed_key              = var.feed_key
   }))
 
   lb_target_group_arns = module.lb_sydney.target_group_arns
@@ -291,7 +299,9 @@ module "ec2_sao_paulo" {
     sandbox_apns_key_id   = var.sandbox_apns_key_id,
     sandbox_apns_key      = var.sandbox_apns_key,
     phone_home_tg_bot_key = var.phone_home_tg_bot_key,
-    phone_home_tg_room_id = var.phone_home_tg_room_id
+    phone_home_tg_room_id = var.phone_home_tg_room_id,
+    algo_gist_url         = var.algo_gist_url,
+    feed_key              = var.feed_key
   }))
 
   lb_target_group_arns = module.lb_sao_paulo.target_group_arns
