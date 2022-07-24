@@ -78,7 +78,7 @@ resource "aws_autoscaling_group" "this" {
 
   target_group_arns = var.lb_target_group_arns
 
-  health_check_grace_period = 30
+  health_check_grace_period = 300
   health_check_type         = "ELB"
 
   vpc_zone_identifier = var.vpc_zone_identifier
