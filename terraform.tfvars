@@ -1,5 +1,5 @@
 // see https://github.com/getsince/test3/releases 
-release_url = "https://github.com/getsince/test3/releases/download/fix-handle-compliment/ubuntu-22-04-amd64.tar.gz"
+release_url = "https://github.com/getsince/test3/releases/download/fix-compliment/ubuntu-22-04-amd64.tar.gz"
 
 // name is used to connect the cluster
 ec2_name    = "since-backend2"
