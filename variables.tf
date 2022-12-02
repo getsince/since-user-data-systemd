@@ -61,3 +61,7 @@ variable "phone_home_tg_room_id" {}
 
 variable "algo_gist_url" {}
 variable "feed_key" {}
+
+variable "app_store_issuer_id" {}
+variable "app_store_key_id" {}
+variable "app_store_key" {}

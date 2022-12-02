@@ -44,7 +44,10 @@ module "ec2_stockholm" {
     phone_home_tg_bot_key = var.phone_home_tg_bot_key,
     phone_home_tg_room_id = var.phone_home_tg_room_id,
     algo_gist_url         = var.algo_gist_url,
-    feed_key              = var.feed_key
+    feed_key              = var.feed_key,
+    app_store_issuer_id   = var.app_store_issuer_id,
+    app_store_key_id      = var.app_store_key_id,
+    app_store_key         = var.app_store_key
   }))
 
   lb_target_group_arns = module.lb_stockholm.target_group_arns
@@ -109,7 +112,10 @@ module "ec2_ohio" {
     phone_home_tg_bot_key = var.phone_home_tg_bot_key,
     phone_home_tg_room_id = var.phone_home_tg_room_id,
     algo_gist_url         = var.algo_gist_url,
-    feed_key              = var.feed_key
+    feed_key              = var.feed_key,
+    app_store_issuer_id   = var.app_store_issuer_id,
+    app_store_key_id      = var.app_store_key_id,
+    app_store_key         = var.app_store_key
   }))
 
   lb_target_group_arns = module.lb_ohio.target_group_arns
@@ -173,7 +179,10 @@ module "ec2_north_california" {
     phone_home_tg_bot_key = var.phone_home_tg_bot_key,
     phone_home_tg_room_id = var.phone_home_tg_room_id,
     algo_gist_url         = var.algo_gist_url,
-    feed_key              = var.feed_key
+    feed_key              = var.feed_key,
+    app_store_issuer_id   = var.app_store_issuer_id,
+    app_store_key_id      = var.app_store_key_id,
+    app_store_key         = var.app_store_key
   }))
 
   lb_target_group_arns = module.lb_north_california.target_group_arns
@@ -237,7 +246,10 @@ module "ec2_sydney" {
     phone_home_tg_bot_key = var.phone_home_tg_bot_key,
     phone_home_tg_room_id = var.phone_home_tg_room_id,
     algo_gist_url         = var.algo_gist_url,
-    feed_key              = var.feed_key
+    feed_key              = var.feed_key,
+    app_store_issuer_id   = var.app_store_issuer_id,
+    app_store_key_id      = var.app_store_key_id,
+    app_store_key         = var.app_store_key
   }))
 
   lb_target_group_arns = module.lb_sydney.target_group_arns
@@ -301,7 +313,10 @@ module "ec2_sao_paulo" {
     phone_home_tg_bot_key = var.phone_home_tg_bot_key,
     phone_home_tg_room_id = var.phone_home_tg_room_id,
     algo_gist_url         = var.algo_gist_url,
-    feed_key              = var.feed_key
+    feed_key              = var.feed_key,
+    app_store_issuer_id   = var.app_store_issuer_id,
+    app_store_key_id      = var.app_store_key_id,
+    app_store_key         = var.app_store_key
   }))
 
   lb_target_group_arns = module.lb_sao_paulo.target_group_arns
