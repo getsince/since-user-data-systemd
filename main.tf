@@ -26,21 +26,6 @@ provider "aws" {
 }
 
 provider "aws" {
-  alias  = "ohio"
-  region = "us-east-2"
-}
-
-provider "aws" {
   alias  = "north_california"
   region = "us-west-1"
-}
-
-provider "aws" {
-  alias  = "sydney"
-  region = "ap-southeast-2"
-}
-
-provider "aws" {
-  alias  = "sao_paulo"
-  region = "sa-east-1"
 }
