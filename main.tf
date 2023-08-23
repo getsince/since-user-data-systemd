@@ -24,8 +24,3 @@ provider "aws" {
   alias  = "stockholm"
   region = "eu-north-1"
 }
-
-provider "aws" {
-  alias  = "north_california"
-  region = "us-west-1"
-}

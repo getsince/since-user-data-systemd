@@ -11,7 +11,8 @@ terraform {
 
 resource "aws_launch_template" "this" {
   name_prefix = "since-"
-  image_id    = data.aws_ami.ubuntu_amd.id
+  # image_id    = data.aws_ami.ubuntu_amd.id
+  image_id = "ami-0d0d35e250f39896e"
 
   instance_type = "t3.micro"
   key_name      = "rail"

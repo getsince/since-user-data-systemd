@@ -31,10 +31,6 @@ variable "tg_room_id" {}
 variable "sentry_dsn" {}
 
 variable "stockholm_database_url" {}
-variable "ohio_database_url" {}
-variable "north_california_database_url" {}
-variable "sydney_database_url" {}
-variable "sao_paulo_database_url" {}
 
 variable "aws_access_key_id" {}
 variable "aws_secret_access_key" {}
